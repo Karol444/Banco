@@ -1,0 +1,19 @@
+
+body {
+  background-color:#f3efe7;
+    background-size: cover;
+
+  }
+
+
+
+
+
+  .container {
+    background-color: #f9ffa7;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    padding: 2rem;
+    color: #fdfdfd;
+    border-radius: 1rem;
+    max-width: 400px;
+  }
