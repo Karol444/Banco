@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta name="author" content="etec-c">
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Eventos</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<section class="hero is-warning">
+    <div class="hero-body">
+      <p class="title">
+      Eventos
+      </p>
+    </div>
+  </section>
+<a>
+    
+
+<body>   
+
+      <!-----  
+        <div id="navbarExampleTransparentExample" class="navbar-menu">
+          <div class="navbar-start">
+            <a class="navbar-item" href="http://carmine/alunos/3DSA/Jo%c3%a3o%20Pedro/inicio.html">
+              Ínicio
+            </a>
+            <div class="navbar-item has-dropdown is-hoverable">
+              <a class="navbar-link" href="">
+                Projetos
+              </a>
+              <div class="navbar-dropdown is-boxed">
+                <a class="navbar-item" href="http://carmine/alunos/3DSA/Jo%c3%a3o%20Pedro/usuarios.html">
+                  Cadastro de usuários
+                </a>
+                <a class="navbar-item" href="http://carmine/alunos/3DSA/Jo%C3%A3o%20Pedro/eventos.html">
+                  Eventos
+                </a>
+                <a class="navbar-item" href="https://bulma.io/documentation/columns/basics/">
+                  Columns
+                </a>
+                <a class="navbar-item" href="https://bulma.io/documentation/layout/container/">
+                  Layout
+                </a>
+                <a class="navbar-item" href="https://bulma.io/documentation/form/general/">
+                  Form
+                </a>
+                <hr class="navbar-divider">
+                <a class="navbar-item is-active" href="http://carmine/professores/carlos/banco/eventos.html">
+                    Exemplo do professor
+                  </a>
+              </div>
+            </div>
+          </div>
+        --->
+        
+
+     <div class="container">
+     <div class="box">
+      <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Código:</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="Código" id="codigo" maxlength="14"
+                                autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Título:</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="Título" id="titulo" maxlength="50"
+                                autocomplete="off" aria-autocomplete="list">
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Data:</label>
+                        <div class="control">
+                            <input class="input" type="date" placeholder="dd/mm/aa" id="data" maxlength="50"
+                                autocomplete="off" aria-autocomplete="list">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Local:</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="Local" id="local" maxlength="14"
+                                autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Valor:</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="0,00" id="preco" maxlength="50"
+                                autocomplete="off" aria-autocomplete="list">
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Total de Ingressos
+                        </label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="Ingressos" id="ingressos" maxlength="50"
+                                autocomplete="off" aria-autocomplete="list">
+                        </div>
+                    </div>
+                </div>
+                <div class="column">                  
+                    <br>
+                    <button class="button is-dark is-responsive is-large " onclick="gravar()">Gravar</button>    
+                    <button class="button is-dark is-responsive is-large"> Usuario</button>           
+                   </div>
+            </div>
+            <div class="notification is-info is-light" id="alert" style="display: none;">
+                <div id="mensagem"></div>
+                <button class="delete" id="alert_delete"></button>
+            </div>
+        </div>
+        <hr>
+        <table class="table is-fullwidth is-hoverable">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Título</th>
+                    <th>Data</th>
+                    <th>Local</th>
+                    <th>Valor</th>
+                    <th>Total de ingressos</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="tabela_usuarios">
+
+            </tbody>
+        </table>
+    </div>
+    
+    <script>
+        var codigo_alt = "";
+
+        window.addEventListener("load", (event) => {
+            carregarUsuarios();
+        });
+
+        document.getElementById('alert_delete').addEventListener('click', () => {s
+            document.getElementById('alert').style.display = "none"
+        });
+ 
+        function carregarUsuarios() {
+            var url = 'eventos.php'
+            var tabela = ''
+
+            fetch(url)
+                .then((response) => response.json())
+                .then((data) => {
+
+                    tabela = ''
+                    for (let item in data) {
+                        tabela += `<tr>
+                <td>`+ data[item].eve_codigo + `</td>
+                <td>`+ data[item].eve_titulo + `</td>
+                <td>`+ data[item].eve_data + `</td>
+                <td>`+ data[item].eve_local + `</td>
+                <td>`+ data[item].eve_preco + `</td>
+                <td>`+ data[item].eve_ingressos + `</td>
+                <td>      
+                    <button class="button" onclick="excluirUsuario('`+ data[item].eve_codigo + `')"><i class="fas fa-trash"></i></button>
+                    <button class="button" onclick="editarUsuario('`+ data[item].eve_titulo + `','`+ data[item].eve_titulo + `')"><i class="fas fa-pen"></i></button>
+                </td>
+            </tr>`
+                    }
+                    document.getElementById("tabela_usuarios").innerHTML = tabela
+
+                })
+        }
+
+        function gravar() {
+            var codigo = document.getElementById("codigo").value;
+            var titulo = document.getElementById("titulo").value;
+            var data = document.getElementById("data").value;
+            var local = document.getElementById("local").value;
+            var preco = document.getElementById("preco").value;
+            var ingressos = document.getElementById("ingressos").value;
+            var url = ""
+            if(codigo_alt != "" & codigo_alt == codigo) {
+                url = 'eventos_alterar.php?codigo=' + codigo + '&titulo=' + titulo + '&data=' + data + '&local=' + local + '&preco=' + preco + '&ingressos=' + ingressos
+            } else {
+                url = 'eventos_incluir.php?codigo=' + codigo + '&titulo=' + titulo + '&data=' + data + '&local=' + local + '&preco=' + preco + '&ingressos=' + ingressos
+            }
+
+            fetch(url)
+                .then((response) => response.json())
+                .then((data) => {
+                    document.getElementById("mensagem").innerHTML = data.mensagem
+                    document.getElementById("alert").style.display = "block"
+                    carregarUsuarios()
+                })
+        }
+
+        function excluirUsuario(codigo) {
+            var url = 'eventos_excluir.php?codigo=' + codigo
+
+            if(confirm("Tem certeza que deseja excluir o evento " + codigo + "?")) {
+                fetch(url)
+                .then((response) => response.json())
+                .then((data) => {
+                    document.getElementById("mensagem").innerHTML = data.mensagem
+                    document.getElementById("alert").style.display = "block"
+                    carregarUsuarios()
+                })
+
+            }
+        }
+
+        function editarUsuario(codigo, titulo) {
+            codigo_alt = codigo
+            document.getElementById("codigo").value = codigo
+            document.getElementById("titulo").value = titulo
+            document.getElementById("titulo").focus()
+        }
+    </script>
+</body>
+
+</html>
