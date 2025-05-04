@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta name="author" content="etec-c">
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Cadastro</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<section class="hero is-warning">
+    <div class="hero-body">
+      <p class="title">
+        Cadastro de Usuarios
+      </p>
+      <p class="subtitle">
+        Cadastre-se 
+      </p>
+    </div>
+  </section>
+
+<body>
+    
+    <div class="container">
+        <div class="box">
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label">CPF:</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="CPF" id="cpf" maxlength="14"
+                                autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-two-thirds">
+                    <div class="field">
+                        <label class="label">Nome:</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="Nome completo" id="nome" maxlength="50"
+                                autocomplete="off" aria-autocomplete="list">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="column">
+                    <br>
+                    <button class="button is-danger is-light" onclick="gravar()">Gravar</button>
+   
+                </div>
+            </div>
+            <div class="notification is-info" id="alert" style="display: none;">
+                <div id="mensagem"></div>
+                <button class="delete" id="alert_delete"></button>
+            </div>
+        </div>
+        <hr>
+        <table class="table is-fullwidth is-hoverable">
+            <thead>
+                <tr>
+                    <th>CPF</th>
+                    <th>Nome</th>
+                  
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="tabela_usuarios">
+
+            </tbody>
+        </table>
+    </div>
+    <script>
+        var cpf_alt = "";
+
+        window.addEventListener("load", (event) => {
+            carregarUsuarios();
+        });
+
+        document.getElementById('alert_delete').addEventListener('click', () => {
+            document.getElementById('alert').style.display = "none"
+        });
+ 
+        function carregarUsuarios() {
+            var url = 'usuarios.php'
+            var tabela = ''
+
+            fetch(url)
+                .then((response) => response.json())
+                .then((data) => {
+
+                    tabela = ''
+                    for (let item in data) {
+                        tabela += `<tr>
+                <td>`+ data[item].usu_cpf + `</td>
+                <td>`+ data[item].usu_nome + `</td>
+              
+                <td>
+
+                    
+                    <button class="button" onclick="excluirUsuario('`+ data[item].usu_cpf + `')"><i class="fas fa-trash"></i></button>
+                    <button class="button" onclick="editarUsuario('`+ data[item].usu_cpf + `','`+ data[item].usu_nome + `')"><i class="fas fa-pen"></i></button>
+                </td>
+            </tr>`
+                    }
+                    document.getElementById("tabela_usuarios").innerHTML = tabela
+
+                })
+        }
+
+        function gravar() {
+            var cpf = document.getElementById("cpf").value;
+            var nome = document.getElementById("nome").value;
+            var evento = document.getElementById("evento").value;
+            var url = ""
+            if(cpf_alt != "" & cpf_alt == cpf) {
+                url = 'usuarios_alterar.php?cpf=' + cpf + '&nome=' + nome 
+            } else {
+                url = 'usuarios_incluir.php?cpf=' + cpf + '&nome=' + nome}
+
+            fetch(url)
+                .then((response) => response.json())
+                .then((data) => {
+                    document.getElementById("mensagem").innerHTML = data.mensagem
+                    document.getElementById("alert").style.display = "block"
+                    carregarUsuarios()
+                })
+        }
+
+        function excluirUsuario(cpf) {
+            var url = 'usuarios_excluir.php?cpf=' + cpf
+
+            if(confirm("Tem certeza que deseja excluir o CPF " + cpf + "?")) {
+                fetch(url)
+                .then((response) => response.json())
+                .then((data) => {
+                    document.getElementById("mensagem").innerHTML = data.mensagem
+                    document.getElementById("alert").style.display = "block"
+                    carregarUsuarios()
+                })
+
+            }
+        }
+
+        function editarUsuario(cpf, nome) {
+            cpf_alt = cpf
+            document.getElementById("cpf").value = cpf
+            document.getElementById("nome").value = nome
+            document.getElementById("nome").focus()
+        }
+    </script>
+</body>
+
+</html>
